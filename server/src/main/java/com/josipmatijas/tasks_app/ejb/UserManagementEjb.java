@@ -44,6 +44,11 @@ public class UserManagementEjb {
         return userRepo.findById(id);
     }
 
+    public Optional<User> getUserByName(String name) {
+        log.info("ejb getUserByName() - name: " + name);
+        return Optional.of(userRepo.findByName(name));
+    }
+
     public long addUser(User user) {
         log.info("ejb addUser()");
         userRepo.save(user);
