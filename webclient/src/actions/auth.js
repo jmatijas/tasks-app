@@ -23,7 +23,7 @@ export const authSignIn = (username, password) => async (dispatch) => {
 
     console.log('response received');
     if (response && response.status >= 200 && response.status < 300) {
-      console.log('response received - status 2xx');
+      console.log('response received - status 2xx', response.data);
       dispatch({
         type: AUTH_SIGN_IN_SUCCESS, // <<-- reducer will put received auth data to state and set state.auth.loading = false
         payload: { username }

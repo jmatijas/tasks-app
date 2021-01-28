@@ -77,6 +77,21 @@ public class UserManagementEjb {
         return Optional.of(id);
     }
 
+    public Optional<Collection<Long>> removeUsers(Collection<Long> userIds) {
+        log.info("ejb removeUsers()");
+        List<Long> removedUserIds = new ArrayList<>(userIds.size());
+
+        for (Long userId : userIds) {
+            Optional<User> userCurrentOpt = userRepo.findById(userId);
+            if(!userCurrentOpt.isPresent()) {
+                return Optional.empty();
+            }
+            userRepo.deleteById(userId);
+        }
+
+        return Optional.of(removedUserIds);
+    }
+
 //    public Optional<Task> asignTaskToUser(long taskId, long userId) {
 //        log.info("ejb asignTaskToUser()");
 //        user.getTasks().add(task);

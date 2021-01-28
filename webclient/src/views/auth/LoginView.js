@@ -46,14 +46,15 @@ const LoginView = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: 'demo@devias.io',
-              password: 'Password1234'
+              email: 'admin',
+              password: 'admin'
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email('Must be a valid email')
-                .max(255)
-                .required('Email is required'),
+              // email: Yup.string()
+              //   .email('Must be a valid email')
+              //   .max(255)
+              //   .required('Email is required'),
+              email: Yup.string().max(255).required('Username is required'),
               password: Yup.string().max(255).required('Password is required')
             })}
             onSubmit={(values) => {
@@ -121,12 +122,11 @@ const LoginView = () => {
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
                   helperText={touched.email && errors.email}
-                  label="Email Address"
+                  label="Username"
                   margin="normal"
                   name="email"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  type="email"
                   value={values.email}
                   variant="outlined"
                 />

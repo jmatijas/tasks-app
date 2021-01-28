@@ -62,4 +62,11 @@ public class UserRestController {
         return Response.noContent().build();
     }
 
+    @DELETE
+    public Response removeUsers(Collection<Long> userIds) {
+        log.info("_JM_ rest removeUsers: " + userIds);
+        userManagementEjb.removeUsers(userIds).orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+        return Response.noContent().build();
+    }
+
 }
