@@ -5,6 +5,9 @@ import {
   USERS_POST,
   USERS_POST_SUCCESS,
   USERS_POST_FAILURE,
+  USERS_EDIT,
+  USERS_EDIT_SUCCESS,
+  USERS_EDIT_FAILURE,
   USERS_DELETE_MANY,
   USERS_DELETE_MANY_SUCCESS,
   USERS_DELETE_MANY_FAILURE,
@@ -15,7 +18,6 @@ import {
 
 const INITIAL_STATE = {
   list: [],
-  createdUserId: undefined,
   selectedIds: [],
   limit: 10,
   page: 0,
@@ -43,21 +45,35 @@ export default (state = INITIAL_STATE, action) => {
         error: action.payload.error
       };
     case USERS_POST:
-      return { ...state, createdUserId: undefined, loading: true };
+      return { ...state, loading: true };
     case USERS_POST_SUCCESS:
       return {
         ...state,
-        createdUserId: action.payload.userId,
         loading: false,
         error: undefined
       };
     case USERS_POST_FAILURE:
       return {
         ...state,
-        createdUserId: undefined,
         loading: false,
         error: action.payload.error
       };
+
+    case USERS_EDIT:
+      return { ...state, loading: true };
+    case USERS_EDIT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: undefined
+      };
+    case USERS_EDIT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error
+      };
+
     case USERS_DELETE_MANY:
       return { ...state, loading: true };
     case USERS_DELETE_MANY_SUCCESS:

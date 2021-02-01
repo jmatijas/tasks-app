@@ -14,12 +14,14 @@ import {
   FormControlLabel,
   Checkbox,
   CircularProgress,
+  Fade,
   makeStyles
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import _ from 'lodash';
 
-import { usersPost, usersPostReset } from 'src/actions/users';
-import { SettingsBackupRestore } from '@material-ui/icons';
+import { usersPost, usersEdit, usersPostReset } from 'src/actions/users';
+import { useParams } from 'react-router';
 
 const userRoles = [
   {
@@ -50,18 +52,43 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const NewUserDetails = ({ className, ...rest }) => {
+const UserCreateEditDetails = ({ className, editing, ...rest }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    firstName: '',
-    lastName: '',
-    role: 'user',
-    signedIn: false,
-    secret: ''
+
+  const userToEditId = useParams().id;
+
+  console.log('id:', userToEditId);
+
+  const users = useSelector((state) => state.users.list);
+
+  console.log('users:', users);
+
+  const userToEdit = users.find((u) => {
+    console.log('---u:', u);
+    return u.id == userToEditId;
   });
 
+  console.log('user:', userToEdit);
+
+  const initValues = editing
+    ? {
+        firstName: userToEdit.name,
+        lastName: userToEdit.lastName,
+        role: userToEdit.admin ? 'admin' : 'user',
+        signedIn: userToEdit.loggedIn,
+        secret: userToEdit.secret
+      }
+    : {
+        firstName: '',
+        lastName: '',
+        role: 'user',
+        signedIn: false,
+        secret: ''
+      };
+
+  const [values, setValues] = useState(initValues);
+
   const dispatch = useDispatch();
-  const createdUserId = useSelector((state) => state.users.createdUserId);
   const error = useSelector((state) => state.users.error);
   const loading = useSelector((state) => state.users.loading);
 
@@ -84,7 +111,9 @@ const NewUserDetails = ({ className, ...rest }) => {
       loggedIn: values.signedIn,
       secret: values.secret
     };
-    dispatch(usersPost(newUser));
+    editing
+      ? dispatch(usersEdit(userToEditId, newUser))
+      : dispatch(usersPost(newUser));
   };
 
   return (
@@ -183,10 +212,22 @@ const NewUserDetails = ({ className, ...rest }) => {
               disabled={loading}
               onClick={handleAddNewUser}
             >
-              Add New User
+              {editing ? 'Edit User' : 'Add New User'}
             </Button>
-            {loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
+            {loading ? (
+              <CircularProgress
+                disableShrink
+                size={24}
+                className={classes.buttonProgress}
+              />
+            ) : (
+              <Fade out timeout={200}>
+                <CircularProgress
+                  disableShrink
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              </Fade>
             )}
           </div>
         </Box>
@@ -195,8 +236,8 @@ const NewUserDetails = ({ className, ...rest }) => {
   );
 };
 
-NewUserDetails.propTypes = {
+UserCreateEditDetails.propTypes = {
   className: PropTypes.string
 };
 
-export default NewUserDetails;
+export default UserCreateEditDetails;

@@ -7,6 +7,9 @@ import {
   USERS_POST,
   USERS_POST_SUCCESS,
   USERS_POST_FAILURE,
+  USERS_EDIT,
+  USERS_EDIT_SUCCESS,
+  USERS_EDIT_FAILURE,
   USERS_DELETE_MANY,
   USERS_DELETE_MANY_SUCCESS,
   USERS_DELETE_MANY_FAILURE,
@@ -84,8 +87,7 @@ export const usersPost = (user) => async (dispatch) => {
       });
       dispatch(
         toastAdd({
-          text:
-            'ERROR Crete user failed with response status ${response.status} ${response.statusText}'
+          text: `ERROR Crete user failed with response status ${response.status} ${response.statusText}`
         })
       );
     }
@@ -111,6 +113,63 @@ export const usersPost = (user) => async (dispatch) => {
     dispatch(
       toastAdd({
         text: `ERROR Crete user failed with error message ${error.message}`
+      })
+    );
+  }
+};
+
+//
+// ACTION CREATOR usersEdit
+//
+export const usersEdit = (id, user) => async (dispatch) => {
+  dispatch({ type: USERS_EDIT });
+
+  try {
+    const response = await api.put(`/users/${id}`, user);
+
+    if (response && response.status >= 200 && response.status < 300) {
+      dispatch({
+        type: USERS_EDIT_SUCCESS
+      });
+
+      dispatch(toastAdd({ text: `Edited user with ID: ${id}` }));
+
+      dispatch(usersGet());
+    } else {
+      dispatch({
+        type: USERS_POST_FAILURE,
+        payload: {
+          error: `Edit user failed with response status ${response.status} ${response.statusText}`
+        }
+      });
+      dispatch(
+        toastAdd({
+          text: `ERROR Edit user failed with response status ${response.status} ${response.statusText}`
+        })
+      );
+    }
+  } catch (error) {
+    if (error.response) {
+      // Request made and server responded
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+    dispatch({
+      type: USERS_EDIT_FAILURE,
+      payload: {
+        error: `ERROR Edit user failed with error message ${error.message}`
+      }
+    });
+    dispatch(
+      toastAdd({
+        text: `ERROR Edit user failed with error message ${error.message}`
       })
     );
   }
@@ -174,8 +233,7 @@ export const usersDeleteMany = (userIds) => async (dispatch) => {
     });
     dispatch(
       toastAdd({
-        text:
-          'ERROR `Delete many users failed with error message ${error.message}`'
+        text: `ERROR Delete many users failed with error message ${error.message}`
       })
     );
   }
