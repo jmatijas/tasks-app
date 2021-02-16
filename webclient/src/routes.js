@@ -25,7 +25,7 @@ const routes = [
         element: <UserListView />
       },
       { path: 'users/create', element: <UserCreateEditView /> },
-      { path: 'users/edit/:id', element: <UserCreateEditView isEdit /> },
+      { path: 'users/edit/:id', element: <UserCreateEditView editing /> },
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'products', element: <ProductListView /> },
       { path: 'settings', element: <SettingsView /> },

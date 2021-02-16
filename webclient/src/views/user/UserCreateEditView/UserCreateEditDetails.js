@@ -55,20 +55,21 @@ const useStyles = makeStyles((theme) => ({
 const UserCreateEditDetails = ({ className, editing, ...rest }) => {
   const classes = useStyles();
 
+  let userToEdit = null;
+
   const userToEditId = useParams().id;
-
   console.log('id:', userToEditId);
-
   const users = useSelector((state) => state.users.list);
-
   console.log('users:', users);
 
-  const userToEdit = users.find((u) => {
-    console.log('---u:', u);
-    return u.id == userToEditId;
-  });
+  if (editing) {
+    userToEdit = users.find((u) => {
+      console.log('---u:', u);
+      return u.id == userToEditId;
+    });
 
-  console.log('user:', userToEdit);
+    console.log('user:', userToEdit);
+  }
 
   const initValues = editing
     ? {
@@ -112,7 +113,7 @@ const UserCreateEditDetails = ({ className, editing, ...rest }) => {
       secret: values.secret
     };
     editing
-      ? dispatch(usersEdit(userToEditId, newUser))
+      ? dispatch(usersEdit(userToEdit.id, newUser))
       : dispatch(usersPost(newUser));
   };
 

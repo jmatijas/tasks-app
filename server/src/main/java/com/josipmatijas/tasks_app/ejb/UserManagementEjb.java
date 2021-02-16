@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Startup;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@Startup
 @Stateless
 public class UserManagementEjb {
 
@@ -27,6 +29,7 @@ public class UserManagementEjb {
 
     @PostConstruct
     private void init() {
+        log.info("ejb init()");
         // Instantiate Spring Data factory
         RepositoryFactorySupport factory = new JpaRepositoryFactory(entityManager);
         // Get an implemetation of UserRepo from factory
@@ -46,7 +49,8 @@ public class UserManagementEjb {
 
     public Optional<User> getUserByName(String name) {
         log.info("ejb getUserByName() - name: " + name);
-        return Optional.of(userRepo.findByName(name));
+        User user = userRepo.findByName(name);
+        return user != null ? Optional.of(user) : Optional.empty();
     }
 
     public long addUser(User user) {

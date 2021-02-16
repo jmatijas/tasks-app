@@ -20,7 +20,7 @@ const UserCreateEditView = ({ editing }) => {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           <Grid item lg={12} md={12} xs={12}>
-            <UserCreateEditDetails editing />
+            <UserCreateEditDetails editing={editing} />
           </Grid>
         </Grid>
       </Container>
